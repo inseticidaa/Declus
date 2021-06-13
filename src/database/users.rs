@@ -10,23 +10,30 @@ impl Message for GetUser {
     type Result = Result<UserResponse, String>;
 }
 
+// Handler to Get a user on database
 impl Handler<GetUser> for DbExecutor {
     type Result = Result<UserResponse, String>;
 
     fn handle(&mut self, msg: GetUser, _ctx: &mut Self::Context) -> Self::Result {
         use crate::database::schema::users;
 
-        let conn = &self.0.get().unwrap();
+        // Use this to get connection from Self DbExecutor
+        let conn = &self.0.get().expect("Cant get connection");
+
+        // Use this to build a query
         let mut query = users::table.into_boxed();
 
+        // Add username to query filter if provided a username on msg
         if let Some(provided_username) = msg.username {
             query = query.filter(users::username.eq_all(provided_username));
         };
 
+        // Add email to query filter if provided a email on msg
         if let Some(provided_email) = msg.email {
             query = query.filter(users::email.eq_all(provided_email));
         };
 
+        // Results is response of query execution
         let results = query.load::<UserEntity>(conn).expect("Error on load user");
 
         if results.len() == 0 {
