@@ -1,5 +1,5 @@
 [package]
-name = "dinous-auth-service"
+name = "declus"
 version = "0.1.0"
 authors = ["Wanderley Alisson <wanderley.alisson@outlook.com>"]
 edition = "2018"

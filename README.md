@@ -1,1 +1,2 @@
-# dinous-auth-service
+# Declus
+Example auth service usign GraphQL
